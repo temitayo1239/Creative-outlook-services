@@ -33,6 +33,7 @@ import { Link } from "react-router-dom";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import heroImage from "@/assets/hero-creative-marketplace.jpg";
+import TestimonialCard from "@/components/testimonials/TestimonialCard";
 
 const Homepage = () => {
   const categories = [
@@ -95,29 +96,44 @@ const Homepage = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Marketing Director",
-      company: "TechFlow Inc",
-      content: "Creative Outlook Services helped us find an amazing UI designer who transformed our app interface. The process was smooth and secure.",
-      rating: 5
-    },
-    {
-      name: "Mike Chen",
-      role: "Graphic Designer",
-      company: "Freelancer",
-      content: "As a designer, I love the instant payment system. Once clients approve my work, I get paid immediately with just a 5% fee.",
-      rating: 5
-    },
-    {
-      name: "Emily Rodriguez",
-      role: "Startup Founder", 
-      company: "GrowthLab",
-      content: "The quality of designers on this platform is outstanding. We found our brand designer here and couldn't be happier.",
-      rating: 5
-    }
-  ];
+const testimonials = [
+  {
+    name: "Sarah Johnson",
+    role: "Marketing Director",
+    company: "TechFlow Inc",
+    content: "Creative Outlook Services helped us find an amazing UI designer who transformed our app interface. The process was smooth and secure.",
+    rating: 5,
+  },
+  {
+    name: "Mike Chen",
+    role: "Graphic Designer",
+    company: "Freelancer",
+    content: "As a designer, I love the instant payment system. Once clients approve my work, I get paid immediately with just a 5% fee.",
+    rating: 5,
+  },
+  {
+    name: "Emily Rodriguez",
+    role: "Startup Founder",
+    company: "GrowthLab",
+    content: "The quality of designers on this platform is outstanding. We found our brand designer here and couldn't be happier.",
+    rating: 5,
+  },
+  {
+    name: "James Lee",
+    role: "Product Manager",
+    company: "InnoSoft",
+    content: "Their vetting system ensures we only get top-tier talent. We've hired three designers so far and love the results.",
+    rating: 4,
+  },
+  {
+    name: "Fatima Ahmed",
+    role: "UX Designer",
+    company: "Remote Freelancer",
+    content: "Being featured on this platform boosted my career. I'm now working with international clients confidently.",
+    rating: 5,
+  }
+];
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -284,37 +300,8 @@ const Homepage = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              What Our Users Say
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Trusted by thousands of clients and designers worldwide
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-4 italic">"{testimonial.content}"</p>
-                  <div>
-                    <div className="font-semibold text-foreground">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role} at {testimonial.company}</div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
+    <TestimonialCard />
+    
       {/* CTA Section */}
       <section className="py-16 lg:py-24 bg-gradient-to-r from-primary to-creative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

@@ -10,7 +10,15 @@ import PaymentPolicy from "./pages/PaymentPolicy";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import BrowseDesigners from "./pages/BrowseDesigners";
+import DesignerProfile from "./pages/DesignerProfile";
+import TestimonialCard from "./components/testimonials/TestimonialCard";  
+import ChatPage from "@/pages/ChatPage";
 
+
+
+// Create a new QueryClient instance
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -26,6 +34,11 @@ const App = () => (
           <Route path="/payment-policy" element={<PaymentPolicy />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/browse-designers" element={<BrowseDesigners />} />
+          <Route path="/designer/:email" element={<DesignerProfile />} />
+          <Route path="/testimonials" element={<TestimonialCard />} />
+          <Route path="/chat/:email" element={<ChatPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

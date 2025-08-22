@@ -14,6 +14,25 @@ import Footer from "@/components/layout/Footer";
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [userType, setUserType] = useState("client");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullname, setFullName] = useState("");
+  const [company, setCompany] = useState("");
+
+  const handleSubmit = () => {
+    console.log("Submitting form with email:", email, "and password:", password);
+    // Here you would typically handle the form submission, e.g., send data to your backend
+    localStorage.setItem("loginData", JSON.stringify({ email, password, userType, location, fullname, company }));
+    toast({
+      title: "Login Successful",
+      description: `Welcome back, ${user.fullname || "User"}!`,
+      variant: "default",
+    });
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 500);
+    // alert("Data saved successfully to localStorage!");
+  }
 
   const designCategories = [
     "Graphic Design",
@@ -87,24 +106,15 @@ const Signup = () => {
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="client-first-name">First Name</Label>
+                        <Label htmlFor="client-full-name">Full Name</Label>
                         <Input
-                          id="client-first-name"
-                          placeholder="John"
+                          id="client-full-name"
+                          placeholder="John Doe"
                           type="text"
+                          onChange={(e) => setFullName(e.target.value)}
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="client-last-name">Last Name</Label>
-                        <Input
-                          id="client-last-name"
-                          placeholder="Doe"
-                          type="text"
-                        />
-                      </div>
-                    </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="client-email">Email</Label>
@@ -115,6 +125,7 @@ const Signup = () => {
                           placeholder="john@example.com"
                           type="email"
                           className="pl-10"
+                          onChange={(e) => setEmail(e.target.value)}
                         />
                       </div>
                     </div>
@@ -125,6 +136,7 @@ const Signup = () => {
                         id="client-company"
                         placeholder="Your company name"
                         type="text"
+                        onChange={(e) => setCompany(e.target.value)}
                       />
                     </div>
                     
@@ -137,6 +149,7 @@ const Signup = () => {
                           placeholder="Create a strong password"
                           type={showPassword ? "text" : "password"}
                           className="pl-10 pr-10"
+                          onChange={(e) => setPassword(e.target.value)}
                         />
                         <button
                           type="button"
@@ -168,7 +181,7 @@ const Signup = () => {
                       </Label>
                     </div>
                     
-                    <Button className="w-full" variant="default" size="lg">
+                    <Button className="w-full" variant="default" size="lg" type="submit" onClick={handleSubmit}>
                       Create Client Account
                     </Button>
                   </div>
@@ -180,24 +193,14 @@ const Signup = () => {
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="designer-first-name">First Name</Label>
                         <Input
-                          id="designer-first-name"
-                          placeholder="Jane"
+                          id="designer-full-name"
+                          placeholder="Jane Smith"
                           type="text"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="designer-last-name">Last Name</Label>
-                        <Input
-                          id="designer-last-name"
-                          placeholder="Smith"
-                          type="text"
-                        />
-                      </div>
-                    </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="designer-email">Email</Label>
@@ -297,7 +300,7 @@ const Signup = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex justify-center">
                 <Button variant="outline" className="w-full">
                   <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -306,12 +309,6 @@ const Signup = () => {
                     <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                   </svg>
                   Google
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                  Facebook
                 </Button>
               </div>
             </CardContent>

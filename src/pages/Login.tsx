@@ -2,22 +2,53 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, Heart, Mail, Lock, User, Briefcase } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Eye, EyeOff, Heart, Mail, Lock } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [userType, setUserType] = useState("client");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    const response = localStorage.getItem("loginData");
+    if (!response) {
+      alert("No user found. Please sign up first.");
+      return;
+    }
+    try {
+      const user = JSON.parse(response);
+      if (
+        user.email === email &&
+        user.password === password
+      ) {
+        toast({
+          title: "Login Successful",
+          description: `Welcome back, ${user.fullname || "User"}!`,
+          variant: "default",
+        });
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 500);
+      } else {
+        alert("Invalid email or password.");
+      }
+    } catch (error) {
+      alert("Corrupted user data. Please sign up again.");
+      localStorage.removeItem("loginData");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           {/* Header */}
@@ -40,149 +71,73 @@ const Login = () => {
           <Card className="shadow-lg">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl text-center">Sign In</CardTitle>
-              <CardDescription className="text-center">
-                Choose your account type and enter your credentials
-              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* User Type Selection */}
-              <Tabs value={userType} onValueChange={setUserType} className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="client" className="flex items-center space-x-2">
-                    <User className="w-4 h-4" />
-                    <span>Client</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="designer" className="flex items-center space-x-2">
-                    <Briefcase className="w-4 h-4" />
-                    <span>Designer</span>
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="client" className="space-y-4 mt-6">
-                  <div className="text-center text-sm text-muted-foreground mb-4">
-                    Sign in to post projects and hire designers
+              <div className="space-y-4 mt-6">
+                <div className="text-center text-sm text-muted-foreground mb-4">
+                  Sign in to your account
+                </div>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="email"
+                        placeholder="Enter your email"
+                        type="email"
+                        className="pl-10"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
                   </div>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="client-email">Email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="client-email"
-                          placeholder="Enter your email"
-                          type="email"
-                          className="pl-10"
-                        />
-                      </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="password"
+                        placeholder="Enter your password"
+                        type={showPassword ? "text" : "password"}
+                        className="pl-10 pr-10"
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
                     </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="client-password">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="client-password"
-                          placeholder="Enter your password"
-                          type={showPassword ? "text" : "password"}
-                          className="pl-10 pr-10"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <input
-                          id="remember-client"
-                          name="remember"
-                          type="checkbox"
-                          className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                        />
-                        <Label htmlFor="remember-client" className="text-sm">
-                          Remember me
-                        </Label>
-                      </div>
-                      <Link to="/forgot-password" className="text-sm text-primary hover:underline">
-                        Forgot password?
-                      </Link>
-                    </div>
-                    
-                    <Button className="w-full" variant="default" size="lg">
-                      Sign In as Client
-                    </Button>
                   </div>
-                </TabsContent>
-                
-                <TabsContent value="designer" className="space-y-4 mt-6">
-                  <div className="text-center text-sm text-muted-foreground mb-4">
-                    Sign in to your designer account
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        id="remember"
+                        name="remember"
+                        type="checkbox"
+                        className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                      />
+                      <Label htmlFor="remember" className="text-sm">
+                        Remember me
+                      </Label>
+                    </div>
+                    <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                      Forgot password?
+                    </Link>
                   </div>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="designer-email">Email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="designer-email"
-                          placeholder="Enter your email"
-                          type="email"
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="designer-password">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="designer-password"
-                          placeholder="Enter your password"
-                          type={showPassword ? "text" : "password"}
-                          className="pl-10 pr-10"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <input
-                          id="remember-designer"
-                          name="remember"
-                          type="checkbox"
-                          className="h-4 w-4 text-creative focus:ring-creative border-gray-300 rounded"
-                        />
-                        <Label htmlFor="remember-designer" className="text-sm">
-                          Remember me
-                        </Label>
-                      </div>
-                      <Link to="/forgot-password" className="text-sm text-creative hover:underline">
-                        Forgot password?
-                      </Link>
-                    </div>
-                    
-                    <Button className="w-full" variant="creative" size="lg">
-                      Sign In as Designer
-                    </Button>
-                  </div>
-                </TabsContent>
-              </Tabs>
-              
+                  <Button
+                    className="w-full"
+                    variant="default"
+                    size="lg"
+                    type="submit"
+                    onClick={handleLogin}
+                  >
+                    Sign In
+                  </Button>
+                </div>
+              </div>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <Separator className="w-full" />
@@ -191,8 +146,7 @@ const Login = () => {
                   <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex justify-center">
                 <Button variant="outline" className="w-full">
                   <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -202,16 +156,9 @@ const Login = () => {
                   </svg>
                   Google
                 </Button>
-                <Button variant="outline" className="w-full">
-                  <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                  Facebook
-                </Button>
               </div>
             </CardContent>
           </Card>
-          
           <div className="text-center text-sm">
             <span className="text-muted-foreground">Don't have an account? </span>
             <Link to="/signup" className="text-primary hover:underline font-medium">
@@ -220,7 +167,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-      
       <Footer />
     </div>
   );
